@@ -6,4 +6,8 @@ router
 .route("/")
 .get( productController.getProduct)
 
+router
+.route("/findone")
+.get(productController.getOneProduct)
+
 module.exports = router;
