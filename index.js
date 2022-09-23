@@ -3,6 +3,7 @@ const cors = require("cors")
 const app = express();
 const userRoute = require("./routes/v1/user.route.js");
 const productRoute = require("./routes/v1/product.route.js")
+const paymentRoute = require("./routes/v1/payment.route")
 const { connectToServer } = require("./utils/dbConnect.js");
 const port = process.env.PORT || 5000
 
@@ -28,6 +29,7 @@ connectToServer((err) => {
 //route
 app.use('/api/v1/user', userRoute)
 app.use('/api/v1/product', productRoute)
+app.use('/api/v1/create-payment-intent', paymentRoute)
 
 
 app.all("*",(req, res)=>{
