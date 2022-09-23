@@ -1,12 +1,6 @@
 require('dotenv').config();
 const stripe = require("stripe")(process.env.STRIPE_KEY);
-
-// const calculateOrderAmount = (items) => {
-//     // Replace this constant with a calculation of the order's amount
-//     // Calculate the order total on the server to prevent
-//     // people from directly manipulating the amount on the client
-//     return 1400;
-//   };
+const { getDb } = require("../utils/dbConnect")
 
 module.exports.payemntController = async (req, res, next) => {
     const service = req.body;
@@ -21,4 +15,25 @@ module.exports.payemntController = async (req, res, next) => {
     res.send({
         clientSecret: paymentIntent.client_secret,
     });
+}
+
+module.exports.saveOrder= async (req, res)=>{
+    try{
+        const body = req.body;
+        const db = getDb();
+        const result = await db.collection("order").insertOne(body);
+        console.log(result)
+        if(result.insertedId){
+            res.status(200).send({
+                successfull : true,
+                id : result.insertedId,
+                body : body,
+            })
+        }
+    }catch(err){
+        res.status(500).send({
+            successfull: false,
+        })
+        console.log(err)
+    }
 }
