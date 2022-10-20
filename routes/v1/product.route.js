@@ -5,6 +5,11 @@ const router = express.Router();
 router
 .route("/")
 .get( productController.getProduct)
+.post(productController.insertOneProduct)
+
+router
+.route("/:id")
+.delete(productController.deleteOneProduct)
 
 router
 .route("/findone")

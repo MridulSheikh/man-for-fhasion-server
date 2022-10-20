@@ -20,7 +20,7 @@ module.exports.getProduct = async (req, res, next) => {
     }
 }
 
-module.exports.getOneProduct = async (req, res) => {
+module.exports.getOneProduct = async (req, res, next) => {
     try{
         const db = getDb();
         const {id} = req.query;
@@ -36,6 +36,38 @@ module.exports.getOneProduct = async (req, res) => {
                 success : false,
             })
         }
+    }catch(err){
+        next(err)
+    }
+}
+
+module.exports.insertOneProduct = async (req, res, next) => {
+    try{
+        const db = getDb();
+        const body = req.body;
+        const result = await db.collection("product").insertOne(body);
+        if(result.insertedId){
+            res.status(200).send({
+                successfull : true,
+                id : result.insertedId,
+                body : body,
+            })
+        }
+    }catch(err){
+        next(err)
+    }
+}
+
+
+module.exports.deleteOneProduct = async (req, res, next) =>{
+    try{
+        const db = getDb();
+        const {id} = req.params;
+        const result = await db.collection("product").deleteOne({_id : ObjectId(id)})
+        res.status(200).send({
+            success : true,
+            result : result
+        })
     }catch(err){
         next(err)
     }
